@@ -4,41 +4,53 @@ import Navbar from './components/Navbar';
 
 function App() {
   const [selected, setSelected] = useState(0);
-  const [enablemultiselection, setenablemultiselection] = useState(false);
-  const [mulitple, setmultiple] = useState([]);
+  const [enablemultiselection, setEnableMultiselection] = useState(false);
+  const [multiple, setMultiple] = useState([]);
 
-  function handlesingleselection(getCurrentId) {
+  function handleSingleSelection(getCurrentId) {
     setSelected(getCurrentId === selected ? null : getCurrentId);
   }
-  function handlemultipleselection(getCurrentId) {
-    let cpymultiple = [...mulitple];
-    const findingindex = cpymultiple.indexOf(getCurrentId);
-    console.log(findingindex);
-    if (findingindex === -1) cpymultiple.push(getCurrentId);
-    else cpymultiple.splice(findingindex, 1);
-    setmultiple(cpymultiple);
+
+  function handleMultipleSelection(getCurrentId) {
+    let copyMultiple = [...multiple];
+    const findingIndex = copyMultiple.indexOf(getCurrentId);
+
+    if (findingIndex === -1) copyMultiple.push(getCurrentId);
+    else copyMultiple.splice(findingIndex, 1);
+    setMultiple(copyMultiple);
   }
-  console.log(selected, mulitple);
+
+  function handleEnableMultipleSelection() {
+    setEnableMultiselection(!enablemultiselection);
+
+    // Reset states when disabling multiple selection
+    if (!enablemultiselection) {
+      setSelected(0);
+      setMultiple([]);
+    }else{
+      setMultiple([0])
+    }
+  }
 
   return (
     <>
       <Navbar />
-      <div className=" flex justify-center items-center overflow-hidden">
-        <div className=" flex flex-col justify-center  p-10 rounded-md md:w-[30%] w-[90%]">
+      <div className="flex justify-center items-center overflow-hidden">
+        <div className="flex flex-col justify-center rounded-md md:w-[30%] pt-3 w-[90%]">
           <button
             className="bg-gray-600 text-white border border-2 border-black"
-            onClick={() => setenablemultiselection(!enablemultiselection)}
+            onClick={handleEnableMultipleSelection}
           >
-            Enable multiple selection
+            {enablemultiselection ? 'Disable multiple selection' : 'Enable multiple selection'}
           </button>
-          {data && data.length > 0
-            ? data.map((dataItem) => (
+          {data && data.length > 0 ? (
+            data.map((dataItem) => (
               <div key={dataItem.id} className="Item">
                 <div
                   onClick={() => {
                     enablemultiselection
-                      ? handlemultipleselection(dataItem.id)
-                      : handlesingleselection(dataItem.id);
+                      ? handleMultipleSelection(dataItem.id)
+                      : handleSingleSelection(dataItem.id);
                   }}
                 >
                   <h3 className="flex justify-between bg-gray-400 rounded-md my-3 items-center pl-2">
@@ -48,15 +60,16 @@ function App() {
                     </span>
                   </h3>
                 </div>
-                {selected === dataItem.id ||
-                  mulitple.indexOf(dataItem.id) !== -1 ? (
+                {selected === dataItem.id || multiple.indexOf(dataItem.id) !== -1 ? (
                   <div className="bg-gray-400 rounded-md text-center mb-3">
                     {dataItem.answer}
                   </div>
                 ) : null}
               </div>
             ))
-            : ''}
+          ) : (
+            ''
+          )}
         </div>
       </div>
     </>
