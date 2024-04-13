@@ -27,7 +27,7 @@ function App() {
     if (!enablemultiselection) {
       setSelected(0);
       setMultiple([]);
-    }else{
+    } else {
       setMultiple([0])
     }
   }
@@ -61,7 +61,7 @@ function App() {
                   </h3>
                 </div>
                 {selected === dataItem.id || multiple.indexOf(dataItem.id) !== -1 ? (
-                  <div className="bg-gray-400 rounded-md text-center mb-3">
+                  <div className="bg-gray-400  rounded-md text-center mb-3">
                     {dataItem.answer}
                   </div>
                 ) : null}
